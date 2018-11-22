@@ -1,17 +1,14 @@
 import React, { Component } from 'react';
-import './App.css';
 import { getActiveLocales } from './locales';
+import { A } from './components/A/A.jsx';
+import './App.css';
 
-const AppContext = React.createContext();
+export const AppContext = React.createContext();
 
 class LocalesProvider extends Component {
   state = {
-    activeLangFlag: 'en',
-    changeActiveLangFlag: (flag) => {
-      console.log(this)
-      this.setState({activeLangFlag: flag})
-    },
-    locales: getActiveLocales,
+    locales: getActiveLocales(),
+    changeLocales: (langFlag) => () => this.setState({ locales: getActiveLocales(langFlag) }),
   }
 
   render() {
@@ -28,33 +25,10 @@ class App extends Component {
     return (
       <LocalesProvider>
         <div className="App">
-          <ChildrenComponent />
+          <A />
         </div>
       </LocalesProvider>
     );
   }
 }
-
-class ChildrenComponent extends Component {
-  render() {
-    return (
-      <AppContext.Consumer>
-        {(context) => {
-          console.log(context.locales(context.activeLangFlag).home)
-          return (
-            <div>
-              <button onClick={() => context.changeActiveLangFlag('ru')}>
-                RU
-              </button>
-              <button onClick={() => context.changeActiveLangFlag('en')}>
-                EN
-              </button>
-            </div>
-          )
-        }}
-      </AppContext.Consumer>
-    )
-  }
-}
-
 export default App;
